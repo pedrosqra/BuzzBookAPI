@@ -1,30 +1,51 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateBookDto, EditBookDto } from './dto';
+import {
+  CreateBookDto,
+  EditBookDto
+} from './dto';
 
 @Injectable()
 export class BookService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService
+  ) {}
 
   async createBook(dto: CreateBookDto) {
-    const price = parseFloat(dto.price);
-    console.log(price);
-    const quantity = parseInt(dto.quantity);
-    return this.prisma.book.create({
+    const {
+      title,
+      author,
+      description,
+      price,
+      quantity,
+      categoryId
+    } = dto;
+
+    const book = this.prisma.book.create({
       data: {
-        ...dto,
+        title,
+        author,
+        description,
         price,
-        quantity
+        bookQuantity: quantity,
+        categoryId
       }
     });
+    return book;
   }
 
   async getBookById(bookId: number) {
-    const book = await this.prisma.book.findUnique({
-      where: { id: bookId }
-    });
+    const book =
+      await this.prisma.book.findUnique({
+        where: { id: bookId }
+      });
     if (!book) {
-      throw new NotFoundException('Book not found');
+      throw new NotFoundException(
+        'Book not found'
+      );
     }
     return book;
   }
@@ -33,14 +54,25 @@ export class BookService {
     return this.prisma.book.findMany();
   }
 
-  async editBook(bookId: number, dto: EditBookDto) {
-    const book = await this.prisma.book.findUnique({
-      where: { id: bookId }
+  async getBooksByCategory(categoryId: number) {
+    return this.prisma.book.findMany({
+      where: { categoryId }
     });
+  }
+
+  async editBook(
+    bookId: number,
+    dto: EditBookDto
+  ) {
+    const book =
+      await this.prisma.book.findUnique({
+        where: { id: bookId }
+      });
     if (!book) {
-      throw new NotFoundException('Book not found');
+      throw new NotFoundException(
+        'Book not found'
+      );
     }
-    const newPrice = parseFloat(dto.price);
 
     return this.prisma.book.update({
       where: { id: bookId },
@@ -48,21 +80,26 @@ export class BookService {
         title: dto.title,
         author: dto.author,
         description: dto.description,
-        price: newPrice
+        price: dto.price
       }
     });
   }
 
   async deleteBook(bookId: number) {
-    const book = await this.prisma.book.findUnique({
-      where: { id: bookId }
-    });
+    const book =
+      await this.prisma.book.findUnique({
+        where: { id: bookId }
+      });
     if (!book) {
-      throw new NotFoundException('Book not found');
+      throw new NotFoundException(
+        'Book not found'
+      );
     }
     await this.prisma.book.delete({
       where: { id: bookId }
     });
-    return { message: 'Book deleted successfully' };
+    return {
+      message: 'Book deleted successfully'
+    };
   }
 }

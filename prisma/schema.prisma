@@ -26,15 +26,17 @@ model User {
 }
 
 model Book {
-  id          Int      @id @default(autoincrement())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  title       String
-  author      String
-  description String?
-  price       Float
-  quantity    Int
-  orders      Order[]
+  id           Int      @id @default(autoincrement())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  title        String
+  author       String
+  description  String?
+  price        Float
+  bookQuantity Int
+  orders       Order[]
+  categoryId   Int
+  category     Category @relation(fields: [categoryId], references: [id])
 }
 
 model Address {
@@ -56,4 +58,10 @@ model Order {
   userId    Int
   book      Book     @relation(fields: [bookId], references: [id])
   bookId    Int
+}
+
+model Category {
+  id    Int    @id @default(autoincrement())
+  name  String
+  books Book[]
 }

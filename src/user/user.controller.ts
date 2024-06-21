@@ -16,7 +16,9 @@ import { EditUserDto } from './dto/edit-user.dto';
 @UseGuards(Guard)
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService
+  ) {}
 
   @Get('me')
   getMe(@GetUser() user: User) {
@@ -29,7 +31,10 @@ export class UserController {
   }
 
   @Patch(':id')
-  editUser(@Param('id') userId: string, @Body() dto: EditUserDto) {
+  editUser(
+    @Param('id') userId: string,
+    @Body() dto: EditUserDto
+  ) {
     return this.userService.editUser(userId, dto);
   }
 

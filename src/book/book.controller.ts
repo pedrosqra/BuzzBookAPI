@@ -8,11 +8,16 @@ import {
   Body
 } from '@nestjs/common';
 import { BookService } from './book.service';
-import { CreateBookDto, EditBookDto } from './dto';
+import {
+  CreateBookDto,
+  EditBookDto
+} from './dto';
 
 @Controller('books')
 export class BookController {
-  constructor(private readonly bookService: BookService) {}
+  constructor(
+    private readonly bookService: BookService
+  ) {}
 
   @Post()
   createBook(@Body() dto: CreateBookDto) {
@@ -21,7 +26,9 @@ export class BookController {
 
   @Get(':id')
   getBookById(@Param('id') bookId: string) {
-    return this.bookService.getBookById(parseInt(bookId));
+    return this.bookService.getBookById(
+      parseInt(bookId)
+    );
   }
 
   @Get()
@@ -29,13 +36,29 @@ export class BookController {
     return this.bookService.getAllBooks();
   }
 
+  @Get('category/:id')
+  getBooksByCategory(@Param('id') id: string) {
+    const categoryId = parseInt(id);
+    return this.bookService.getBooksByCategory(
+      categoryId
+    );
+  }
+
   @Patch(':id')
-  editBook(@Param('id') bookId: string, @Body() dto: EditBookDto) {
-    return this.bookService.editBook(parseInt(bookId), dto);
+  editBook(
+    @Param('id') bookId: string,
+    @Body() dto: EditBookDto
+  ) {
+    return this.bookService.editBook(
+      parseInt(bookId),
+      dto
+    );
   }
 
   @Delete(':id')
   deleteBook(@Param('id') bookId: string) {
-    return this.bookService.deleteBook(parseInt(bookId));
+    return this.bookService.deleteBook(
+      parseInt(bookId)
+    );
   }
 }

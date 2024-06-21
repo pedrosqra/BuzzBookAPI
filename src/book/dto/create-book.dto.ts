@@ -2,8 +2,7 @@ import {
   IsString,
   IsNotEmpty,
   IsOptional,
-  IsNumber,
-  IsNumberString
+  IsNumber
 } from 'class-validator';
 
 export class CreateBookDto {
@@ -19,11 +18,15 @@ export class CreateBookDto {
   @IsOptional()
   description?: string;
 
-  @IsNumberString()
+  @IsNumber()
   @IsNotEmpty()
-  price: string;
+  price: number;
 
-  @IsNumberString()
+  @IsNumber()
   @IsNotEmpty()
-  quantity: string;
+  quantity: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  categoryId: number;
 }
