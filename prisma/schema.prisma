@@ -20,7 +20,7 @@ model User {
   email     String    @unique
   hash      String
   firstName String?
-  lasName   String?
+  lastName  String?
   Address   Address[]
   Order     Order[]
 }
@@ -33,6 +33,7 @@ model Book {
   author      String
   description String?
   price       Float
+  quantity    Int
   orders      Order[]
 }
 
@@ -41,7 +42,7 @@ model Address {
   street     String
   district   String
   postalCode String
-  user       User   @relation(fields: [userId], references: [id])
+  user       User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     Int
 }
 
