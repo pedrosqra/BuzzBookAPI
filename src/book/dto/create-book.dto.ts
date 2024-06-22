@@ -2,7 +2,9 @@ import {
   IsString,
   IsNotEmpty,
   IsOptional,
-  IsNumber
+  IsNumber,
+  IsCurrency,
+  IsPositive
 } from 'class-validator';
 
 export class CreateBookDto {
@@ -20,10 +22,12 @@ export class CreateBookDto {
 
   @IsNumber()
   @IsNotEmpty()
+  @IsCurrency()
   price: number;
 
   @IsNumber()
   @IsNotEmpty()
+  @IsPositive()
   quantity: number;
 
   @IsNumber()

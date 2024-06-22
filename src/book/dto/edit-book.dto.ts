@@ -1,7 +1,9 @@
 import {
   IsString,
   IsOptional,
-  IsNumber
+  IsNumber,
+  IsCurrency,
+  IsNotEmpty
 } from 'class-validator';
 
 export class EditBookDto {
@@ -18,6 +20,7 @@ export class EditBookDto {
   description?: string;
 
   @IsNumber()
-  @IsOptional()
+  @IsNotEmpty()
+  @IsCurrency()
   price?: number;
 }
