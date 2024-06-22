@@ -17,7 +17,7 @@ export class OrderService {
   async createOrder(dto: CreateOrderDto) {
     const { userId, bookId, quantity } = dto;
 
-    this.isBookAvailable(bookId);
+    this.isBookAvailable(bookId, quantity);
 
     return this.prisma.order.create({
       data: {
@@ -123,18 +123,22 @@ export class OrderService {
     };
   }
 
-  async isBookAvailable(bookIdInteger: number) {
+  async isBookAvailable(
+    bookIdInteger: number,
+    quantity: number
+  ) {
     const book =
       await this.prisma.book.findUnique({
         where: { id: bookIdInteger }
       });
+
     if (!book) {
       throw new NotFoundException(
         `Book with id ${bookIdInteger} not found`
       );
     }
 
-    if (!(book.bookQuantity > 0)) {
+    if (!(book.bookQuantity >= quantity)) {
       throw new NotFoundException(
         `Book with id ${bookIdInteger} not available`
       );

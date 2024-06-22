@@ -5,7 +5,8 @@ import {
   Patch,
   Delete,
   Param,
-  Body
+  Body,
+  Query
 } from '@nestjs/common';
 import { BookService } from './book.service';
 import {
@@ -24,10 +25,17 @@ export class BookController {
     return this.bookService.createBook(dto);
   }
 
+  @Get('search')
+  getBooksByTitle(@Query('title') title: string) {
+    return this.bookService.getBooksByTitle(
+      title
+    );
+  }
+
   @Get(':id')
   getBookById(@Param('id') bookId: string) {
     return this.bookService.getBookById(
-      parseInt(bookId)
+      parseInt(bookId, 10)
     );
   }
 

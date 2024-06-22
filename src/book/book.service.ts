@@ -37,6 +37,18 @@ export class BookService {
     return book;
   }
 
+  async getBooksByTitle(title: string) {
+    console.log(title);
+    return this.prisma.book.findMany({
+      where: {
+        title: {
+          contains: title,
+          mode: 'insensitive'
+        }
+      }
+    });
+  }
+
   async getBookById(bookId: number) {
     const book =
       await this.prisma.book.findUnique({
