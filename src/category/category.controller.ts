@@ -5,14 +5,18 @@ import {
   Get,
   Param,
   Patch,
-  Delete
+  Delete,
+  UseGuards
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import {
   CreateCategoryDto,
   EditCategoryDto
 } from './dto';
+import { Guard } from 'src/auth/guard';
+import { Roles } from '../auth/decorator/roles.decorator';
 
+@UseGuards(Guard)
 @Controller('category')
 export class CategoryController {
   constructor(
@@ -20,6 +24,7 @@ export class CategoryController {
   ) {}
 
   @Post()
+  @Roles('ADMIN')
   createCategory(@Body() dto: CreateCategoryDto) {
     return this.categoryService.createCategory(
       dto
@@ -27,6 +32,7 @@ export class CategoryController {
   }
 
   @Get(':id')
+  @Roles('ADMIN')
   getCategoryById(@Param('id') id: string) {
     const categoryId = parseInt(id);
     return this.categoryService.getCategoryById(
@@ -35,11 +41,13 @@ export class CategoryController {
   }
 
   @Get()
+  @Roles('ADMIN')
   getAllCategories() {
     return this.categoryService.getAllCategories();
   }
 
   @Patch(':id')
+  @Roles('ADMIN')
   editCategory(
     @Param('id') id: string,
     @Body() dto: EditCategoryDto
@@ -52,6 +60,7 @@ export class CategoryController {
   }
 
   @Delete(':id')
+  @Roles('ADMIN')
   deleteCategory(@Param('id') id: string) {
     const categoryId = parseInt(id);
     return this.categoryService.deleteCategory(

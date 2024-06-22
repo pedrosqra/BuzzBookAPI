@@ -6,14 +6,18 @@ import {
   Delete,
   Param,
   Body,
-  Query
+  Query,
+  UseGuards
 } from '@nestjs/common';
 import { BookService } from './book.service';
 import {
   CreateBookDto,
   EditBookDto
 } from './dto';
+import { Guard } from 'src/auth/guard';
+import { Roles } from '../auth/decorator/roles.decorator';
 
+@UseGuards(Guard)
 @Controller('books')
 export class BookController {
   constructor(
@@ -21,6 +25,7 @@ export class BookController {
   ) {}
 
   @Post()
+  @Roles('ADMIN')
   createBook(@Body() dto: CreateBookDto) {
     return this.bookService.createBook(dto);
   }
@@ -53,6 +58,7 @@ export class BookController {
   }
 
   @Patch(':id')
+  @Roles('ADMIN')
   editBook(
     @Param('id') bookId: string,
     @Body() dto: EditBookDto
@@ -64,6 +70,7 @@ export class BookController {
   }
 
   @Delete(':id')
+  @Roles('ADMIN')
   deleteBook(@Param('id') bookId: string) {
     return this.bookService.deleteBook(
       parseInt(bookId)

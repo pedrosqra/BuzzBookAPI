@@ -6,14 +6,18 @@ import {
   Delete,
   Param,
   Body,
-  ParseIntPipe
+  ParseIntPipe,
+  UseGuards
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import {
   CreateOrderDto,
   EditOrderDto
 } from './dto';
+import { Guard } from 'src/auth/guard';
+import { Roles } from '../auth/decorator/roles.decorator';
 
+@UseGuards(Guard)
 @Controller('orders')
 export class OrderController {
   constructor(
@@ -42,6 +46,7 @@ export class OrderController {
   }
 
   @Get()
+  @Roles('ADMIN')
   getAllOrders() {
     return this.orderService.getAllOrders();
   }

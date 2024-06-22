@@ -12,6 +12,7 @@ import { GetUser } from 'src/auth/decorator';
 import { User } from '@prisma/client';
 import { UserService } from './user.service';
 import { EditUserDto } from './dto/edit-user.dto';
+import { Roles } from '../auth/decorator/roles.decorator';
 
 @UseGuards(Guard)
 @Controller('users')
@@ -39,6 +40,7 @@ export class UserController {
   }
 
   @Delete(':id')
+  @Roles('ADMIN')
   deleteUser(@Param('id') userId: string) {
     return this.userService.deleteUser(userId);
   }

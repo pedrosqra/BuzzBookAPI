@@ -1,4 +1,7 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { SignupDto, AuthDto } from './dto';
@@ -14,7 +17,9 @@ export class AuthService {
     private config: ConfigService
   ) {}
 
-  async signup(dto: SignupDto): Promise<{ accessToken: string }> {
+  async signup(
+    dto: SignupDto
+  ): Promise<{ accessToken: string }> {
     const hash = await argon.hash(dto.password);
     try {
       const user = await this.prisma.user.create({
@@ -23,6 +28,7 @@ export class AuthService {
           hash,
           firstName: dto.firstName,
           lastName: dto.lastName,
+          role: dto.role || 'USER',
           Address: {
             create: {
               street: dto.street,
@@ -32,36 +38,66 @@ export class AuthService {
           }
         }
       });
-      const accessToken = await this.signToken(user.id, user.email);
+      const accessToken = await this.signToken(
+        user.id,
+        user.email,
+        user.role
+      );
       return { accessToken };
     } catch (error) {
-      if (error instanceof PrismaClientKnownRequestError) {
+      if (
+        error instanceof
+        PrismaClientKnownRequestError
+      ) {
         if (error.code === 'P2002') {
-          throw new ForbiddenException('Credentials taken');
+          throw new ForbiddenException(
+            'Credentials taken'
+          );
         }
       }
       throw error;
     }
   }
 
-  async signin(dto: AuthDto): Promise<{ accessToken: string }> {
-    const user = await this.prisma.user.findUnique({
-      where: { email: dto.email }
-    });
+  async signin(
+    dto: AuthDto
+  ): Promise<{ accessToken: string }> {
+    const user =
+      await this.prisma.user.findUnique({
+        where: { email: dto.email }
+      });
 
-    if (!user) throw new ForbiddenException('Credentials incorrect');
+    if (!user)
+      throw new ForbiddenException(
+        'Credentials incorrect'
+      );
 
-    const pwMatches = await argon.verify(user.hash, dto.password);
+    const pwMatches = await argon.verify(
+      user.hash,
+      dto.password
+    );
 
-    if (!pwMatches) throw new ForbiddenException('Credentials incorrect');
+    if (!pwMatches)
+      throw new ForbiddenException(
+        'Credentials incorrect'
+      );
 
-    const accessToken = await this.signToken(user.id, user.email);
+    const accessToken = await this.signToken(
+      user.id,
+      user.email,
+      user.role
+    );
     return { accessToken };
   }
 
-  private async signToken(userId: number, email: string): Promise<string> {
-    const payload = { sub: userId, email };
-    const secret = this.config.get<string>('JWT_SECRET');
+  private async signToken(
+    userId: number,
+    email: string,
+    role: string
+  ): Promise<string> {
+    const payload = { sub: userId, email, role };
+    const secret =
+      this.config.get<string>('JWT_SECRET');
 
     return this.jwt.signAsync(payload, {
       expiresIn: '30m',

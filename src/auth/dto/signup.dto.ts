@@ -3,7 +3,8 @@ import {
   IsNotEmpty,
   IsString,
   IsPostalCode,
-  IsStrongPassword
+  IsStrongPassword,
+  IsOptional
 } from 'class-validator';
 
 export class SignupDto {
@@ -36,4 +37,8 @@ export class SignupDto {
   @IsNotEmpty()
   @IsPostalCode()
   postalCode: string;
+
+  @IsString()
+  @IsOptional()
+  role?: string;
 }
