@@ -99,7 +99,10 @@ buzzbook/
     ```bash
     yarn start:dev
     ```
-    
+    - Também é possível rodar o comando abaixo para rodar os 4 comandos de setup de uma vez só.
+      ```bash
+      yarn setup
+      ```    
 
 A aplicação estará disponível em `http://localhost:3333`. O banco de dados pode ser visualizado com o Prisma ao executar o comando: 
    ```bash
