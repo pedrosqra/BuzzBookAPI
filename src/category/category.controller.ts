@@ -7,7 +7,8 @@ import {
   Patch,
   Delete,
   UseGuards,
-  UseFilters
+  UseFilters,
+  ParseIntPipe
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import {
@@ -35,10 +36,11 @@ export class CategoryController {
   }
 
   @Get(':id')
-  getCategoryById(@Param('id') id: string) {
-    const categoryId = parseInt(id);
+  getCategoryById(
+    @Param('id', ParseIntPipe) id: number
+  ) {
     return this.categoryService.getCategoryById(
-      categoryId
+      id
     );
   }
 
@@ -50,22 +52,22 @@ export class CategoryController {
   @Patch(':id')
   @Roles('ADMIN')
   editCategory(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() dto: EditCategoryDto
   ) {
-    const categoryId = parseInt(id);
     return this.categoryService.editCategory(
-      categoryId,
+      id,
       dto
     );
   }
 
   @Delete(':id')
   @Roles('ADMIN')
-  deleteCategory(@Param('id') id: string) {
-    const categoryId = parseInt(id);
+  deleteCategory(
+    @Param('id', ParseIntPipe) id: number
+  ) {
     return this.categoryService.deleteCategory(
-      categoryId
+      id
     );
   }
 }

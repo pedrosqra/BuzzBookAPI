@@ -13,7 +13,7 @@ import {
   EditOrderDto
 } from './dto';
 import { buildResponse } from '../util/response.util';
-import { BookRepository } from '../book/book.repository';
+import { BookService } from '../book/book.service';
 
 @Injectable()
 export class OrderService {
@@ -23,7 +23,7 @@ export class OrderService {
 
   constructor(
     private readonly orderRepository: OrderRepository,
-    private readonly bookRepository: BookRepository
+    private readonly bookService: BookService
   ) {}
 
   async createOrder(
@@ -304,7 +304,7 @@ export class OrderService {
     quantity: number
   ): Promise<void> {
     const book =
-      await this.bookRepository.findById(bookId);
+      await this.bookService.getBookById(bookId);
 
     if (!book) {
       throw new NotFoundException(
@@ -312,7 +312,7 @@ export class OrderService {
       );
     }
 
-    if (book.bookQuantity < quantity) {
+    if (book.data.bookQuantity < quantity) {
       throw new BadRequestException(
         `Book with id ${bookId} is not available or has insufficient quantity`
       );

@@ -3,6 +3,7 @@ import { OrderService } from './order.service';
 import { OrderController } from './order.controller';
 import { PrismaService } from '../prisma/prisma.service';
 import { OrderRepository } from './order.repository';
+import { BookService } from '../book/book.service';
 import { BookRepository } from '../book/book.repository';
 
 @Module({
@@ -10,6 +11,7 @@ import { BookRepository } from '../book/book.repository';
   providers: [
     OrderService,
     OrderRepository,
+    BookService,
     BookRepository,
     PrismaService
   ]
