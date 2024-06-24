@@ -60,16 +60,18 @@ buzzbook/
     
     **Bash**
     
-    `git clone <URL_DO_REPOSITORIO>`
+    ```bash
+   git clone <URL_DO_REPOSITORIO>
+    ```
     
-3. **Instale as dependências:**
+4. **Instale as dependências:**
     
     **Bash**
+   ```bash
+    yarn install
+   ```
     
-    `yarn install`
-    
-4. **Configure as variáveis de ambiente:**
-    - **Os arquivos de configuração já estão disponíveis no repositório do projeto para facilitar a execução, apesar de, por questões de segurança, não deverem estar; contudo, abri essa exceção devido ao escopo do desafio.**
+6. **Configure as variáveis de ambiente:**
     - Crie um arquivo `.env` na raiz do projeto e defina as seguintes variáveis:
         
         `DATABASE_URL=postgresql://<USUARIO>:<SENHA>@<HOST>:<PORTA>/<NOME_DO_BANCO>
@@ -79,30 +81,34 @@ buzzbook/
         `DATABASE_URL=postgresql://<USUARIO>:<SENHA>@<HOST>:<PORTA>/<NOME_DO_BANCO>
         JWT_SECRET=<CHAVE_SECRETA_JWT>`
         
-5. **Inicie o banco de dados:**
+7. **Inicie o banco de dados:**
     - Usando Docker Compose:
         
         **Bash**
-        
-        `docker-compose up -d`
+      ```bash
+        docker-compose up -d
+      ```
    - Aguarde os containers serem estabelecidos e então rode o próximo comando.
 
-6. **Execute as migrações do banco de dados:**
+8. **Execute as migrações do banco de dados:**
     
     **Bash**
+   ```bash
+    yarn prisma migrate dev
+   ```
     
-    `yarn prisma migrate dev`
-    
-7. **Inicie a aplicação:**
+10. **Inicie a aplicação:**
     
     **Bash**
-    
-    `yarn start:dev`
+    ```bash
+    yarn start:dev
+    ```
     
 
 A aplicação estará disponível em `http://localhost:3333`. O banco de dados pode ser visualizado com o Prisma ao executar o comando: 
-
-`npx dotenv -e .env -- prisma studio`
+   ```bash
+npx dotenv -e .env -- prisma studio
+```
 
 O link para visualização é: `http://localhost:5555`.
 
@@ -115,11 +121,14 @@ A documentação completa dos endpoints da API, incluindo os métodos HTTP, par�
 O projeto inclui testes unitários e de integração, que podem ser executados com o comando:
 
 **Bash**
-
-`yarn test:e2e`
+```bash
+yarn test:e2e
+```
 
 O banco de dados de testes pode ser visualizado com o Prisma ao executar o comando:
 
-`npx dotenv -e .env.test -- prisma studio`
+   ```bash
+npx dotenv -e .env.test -- prisma studio
+```
 
 O link para visualização é: `http://localhost:5555`.
