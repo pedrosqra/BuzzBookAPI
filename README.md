@@ -1,6 +1,6 @@
 ### Visão Geral :eyes:
 
-O Buzzbook é um sistema de livraria online desenvolvido com o framework NestJS e o banco de dados PostgreSQL. Ele oferece funcionalidades de gerenciamento de livros, categorias, usuários, autenticação, pedidos e estoque.
+O Buzzbook é um sistema de livraria online desenvolvido com o framework NestJS e o banco de dados PostgreSQL. Ele oferece funcionalidades de gerenciamento de livros, categorias, usuários, autenticação, pedidos e estoque. 
 
 ### Tecnologias Utilizadas :woman_technologist:
 
@@ -107,7 +107,7 @@ O link para visualização é: `http://localhost:5555`.
 
 ### **Endpoints da API**
 
-A documentação completa dos endpoints da API, incluindo os métodos HTTP, parâmetros e exemplos de requisição e resposta, pode ser encontrada no arquivo `http://localhost:3333/api#` no Swagger.
+A documentação completa dos endpoints da API, incluindo os métodos HTTP, parâmetros e exemplos de requisição e resposta, pode ser encontrada no arquivo `http://localhost:3333/api#` no Swagger. A API também pode ser acessada nesse [link](https://buzzbookapi-production.up.railway.app/api) com toda a documentação do Swagger.
 
 ### **Testes**
 
