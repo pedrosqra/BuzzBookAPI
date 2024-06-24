@@ -79,11 +79,12 @@ buzzbook/
         JWT_SECRET=<CHAVE_SECRETA_JWT>`
         
 5. **Inicie o banco de dados:**
-    - Se estiver usando Docker Compose:
+    - Usando Docker Compose:
         
         **Bash**
         
         `docker-compose up -d`
+      Aguarde os conteiners serem estabelecidos e então rode o próximo comando.
 
 6. **Execute as migrações do banco de dados:**
     
