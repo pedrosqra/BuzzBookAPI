@@ -1,6 +1,6 @@
 ### Visão Geral :eyes:
 
-O Buzzbook é um sistema de livraria online desenvolvido com o framework NestJS e o banco de dados PostgreSQL. Ele oferece funcionalidades de gerenciamento de livros, categorias, usuários, autenticação, pedidos e estoque. 
+O [Buzzbook](https://buzzbookapi-production.up.railway.app/api) é um sistema de livraria online desenvolvido com o framework NestJS e o banco de dados PostgreSQL. Ele oferece funcionalidades de gerenciamento de livros, categorias, usuários, autenticação, pedidos e estoque. 
 
 ### Tecnologias Utilizadas :woman_technologist:
 
@@ -58,18 +58,19 @@ buzzbook/
     - Docker e Docker Compose instalados
 2. **Clone o repositório:**
     
-    **Bash**
+
     
-    `git clone <URL_DO_REPOSITORIO>`
+    ```bash
+   git clone <URL_DO_REPOSITORIO>
+    ```
     
-3. **Instale as dependências:**
+4. **Instale as dependências:**
+
+   ```bash
+    yarn install
+   ```
     
-    **Bash**
-    
-    `yarn install`
-    
-4. **Configure as variáveis de ambiente:**
-    - **Os arquivos de configuração já estão disponíveis no repositório do projeto para facilitar a execução, apesar de, por questões de segurança, não deverem estar; contudo, abri essa exceção devido ao escopo do desafio.**
+6. **Configure as variáveis de ambiente:**
     - Crie um arquivo `.env` na raiz do projeto e defina as seguintes variáveis:
         
         `DATABASE_URL=postgresql://<USUARIO>:<SENHA>@<HOST>:<PORTA>/<NOME_DO_BANCO>
@@ -79,47 +80,50 @@ buzzbook/
         `DATABASE_URL=postgresql://<USUARIO>:<SENHA>@<HOST>:<PORTA>/<NOME_DO_BANCO>
         JWT_SECRET=<CHAVE_SECRETA_JWT>`
         
-5. **Inicie o banco de dados:**
+7. **Inicie o banco de dados:**
     - Usando Docker Compose:
         
-        **Bash**
-        
-        `docker-compose up -d`
+      ```bash
+        docker-compose up -d
+      ```
    - Aguarde os containers serem estabelecidos e então rode o próximo comando.
 
-6. **Execute as migrações do banco de dados:**
+8. **Execute as migrações do banco de dados:**
     
-    **Bash**
+   ```bash
+    yarn prisma migrate dev
+   ```
     
-    `yarn prisma migrate dev`
+10. **Inicie a aplicação:**
     
-7. **Inicie a aplicação:**
-    
-    **Bash**
-    
-    `yarn start:dev`
+    ```bash
+    yarn start:dev
+    ```
     
 
 A aplicação estará disponível em `http://localhost:3333`. O banco de dados pode ser visualizado com o Prisma ao executar o comando: 
-
-`npx dotenv -e .env -- prisma studio`
+   ```bash
+npx dotenv -e .env -- prisma studio
+```
 
 O link para visualização é: `http://localhost:5555`.
 
 ### **Endpoints da API**
 
-A documentação completa dos endpoints da API, incluindo os métodos HTTP, parâmetros e exemplos de requisição e resposta, pode ser encontrada no arquivo `http://localhost:3333/api#` no Swagger. A API também pode ser acessada nesse [link](https://buzzbookapi-production.up.railway.app/api) com toda a documentação do Swagger.
+A documentação completa dos endpoints da API, incluindo os métodos HTTP, parâmetros e exemplos de requisição e resposta, pode ser encontrada no arquivo `http://localhost:3333/api#` no Swagger. A API também pode ser acessada nesse [https://buzzbookapi-production.up.railway.app/api](https://buzzbookapi-production.up.railway.app/api) com toda a documentação do Swagger.
 
 ### **Testes**
 
 O projeto inclui testes unitários e de integração, que podem ser executados com o comando:
 
-**Bash**
-
-`yarn test:e2e`
+```bash
+yarn test:e2e
+```
 
 O banco de dados de testes pode ser visualizado com o Prisma ao executar o comando:
 
-`npx dotenv -e .env.test -- prisma studio`
+   ```bash
+npx dotenv -e .env.test -- prisma studio
+```
 
 O link para visualização é: `http://localhost:5555`.
