@@ -1,8 +1,8 @@
-### Visão Geral
+### Visão Geral :eyes:
 
 O Buzzbook é um sistema de livraria online desenvolvido com o framework NestJS e o banco de dados PostgreSQL. Ele oferece funcionalidades de gerenciamento de livros, categorias, usuários, autenticação, pedidos e estoque.
 
-### Tecnologias Utilizadas
+### Tecnologias Utilizadas :woman_technologist:
 
 - **Linguagem:** TypeScript
 - **Framework:** NestJS
@@ -12,7 +12,7 @@ O Buzzbook é um sistema de livraria online desenvolvido com o framework NestJS 
 - **Gerenciamento de Pacotes:** Yarn
 - **Outras:** Argon2 (hash de senhas), Class-transformer e Class-validator (validação de dados)
 
-### Arquitetura
+### Arquitetura :triangular_ruler:
 
 O projeto segue o padrão **Controlador-Serviço-Repositório (CSR)**, uma variação do MVC adaptada para o desenvolvimento de APIs RESTful. O NestJS facilita a implementação dessa arquitetura, fornecendo uma estrutura modular e organizada para os controladores, serviços e repositórios.
 
@@ -20,13 +20,13 @@ O projeto segue o padrão **Controlador-Serviço-Repositório (CSR)**, uma varia
 - **Serviços (Services):** Implementam a lógica de negócio da aplicação, orquestrando as operações necessárias e interagindo com os repositórios.
 - **Repositórios (Repositories):** Abstraem a interação com o banco de dados, utilizando o Prisma Client para realizar operações CRUD (Create, Read, Update, Delete) e consultas.
 
-### Padrões de Projeto
+### Padrões de Projeto :straight_ruler:
 
 - **Repository:** Utilizado para encapsular o acesso ao banco de dados e fornecer uma interface consistente para as operações de CRUD (Create, Read, Update, Delete).
 - **Dependency Injection:** Implementado pelo NestJS para gerenciar as dependências entre os componentes da aplicação, tornando o código mais modular e testável.
 - **Strategy:** Utilizado para a autenticação, permitindo a flexibilidade de adicionar diferentes estratégias de autenticação (JWT, OAuth, etc.) no futuro.
 
-### Estrutura do Projeto
+### Estrutura do Projeto :construction:
 `````
 buzzbook/
 ├── dist/                   # Arquivos compilados
@@ -51,7 +51,7 @@ buzzbook/
 ├── tsconfig.json           # Configurações do TypeScript
 └── yarn.lock               # Arquivos de lock do Yarn
 `````
-### **Executando o Projeto**
+### **Executando o Projeto** :traffic_light:
 
 1. **Pré-requisitos:**
     - Node.js e Yarn instalados
