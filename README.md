@@ -69,6 +69,7 @@ buzzbook/
     `yarn install`
     
 4. **Configure as variáveis de ambiente:**
+    - **Os arquivos de configuração já estão disponíveis no repositório do projeto para facilitar a execução, apesar de, por questões de segurança, não deverem estar; contudo, abri essa exceção devido ao escopo do desafio.**
     - Crie um arquivo `.env` na raiz do projeto e defina as seguintes variáveis:
         
         `DATABASE_URL=postgresql://<USUARIO>:<SENHA>@<HOST>:<PORTA>/<NOME_DO_BANCO>
