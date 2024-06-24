@@ -84,7 +84,7 @@ buzzbook/
         **Bash**
         
         `docker-compose up -d`
-      Aguarde os conteiners serem estabelecidos e então rode o próximo comando.
+   - Aguarde os containers serem estabelecidos e então rode o próximo comando.
 
 6. **Execute as migrações do banco de dados:**
     
