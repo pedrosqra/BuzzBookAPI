@@ -7,17 +7,22 @@ import {
   Param,
   Body,
   ParseIntPipe,
-  UseGuards
+  UseGuards,
+  UseFilters
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import {
   CreateOrderDto,
   EditOrderDto
 } from './dto';
-import { Guard } from 'src/auth/guard';
+import { Guard } from '../auth/guard';
 import { Roles } from '../auth/decorator/roles.decorator';
+import { HttpExceptionFilter } from '../exceptions/http-exception.filter';
+import { GetUser } from '../auth/decorator';
+import { User } from '@prisma/client';
 
 @UseGuards(Guard)
+@UseFilters(HttpExceptionFilter)
 @Controller('orders')
 export class OrderController {
   constructor(
@@ -25,49 +30,66 @@ export class OrderController {
   ) {}
 
   @Post()
-  createOrder(@Body() dto: CreateOrderDto) {
-    return this.orderService.createOrder(dto);
+  createOrder(
+    @Body() dto: CreateOrderDto,
+    @GetUser() user: User
+  ) {
+    return this.orderService.createOrder(
+      user.id,
+      dto
+    );
   }
 
   @Patch(':id/confirm')
   confirmOrder(
-    @Param('id', ParseIntPipe) orderId: number
+    @Param('id', ParseIntPipe) orderId: number,
+    @GetUser() user: User
   ) {
     return this.orderService.confirmOrder(
+      user.id,
       orderId
     );
   }
 
   @Get(':id')
-  getOrderById(@Param('id') orderId: string) {
+  getOrderById(
+    @Param('id', ParseIntPipe) orderId: number,
+    @GetUser() user: User
+  ) {
     return this.orderService.getOrderById(
-      parseInt(orderId)
+      user.id,
+      orderId
     );
   }
 
   @Get()
   @Roles('ADMIN')
   getAllOrders() {
-    return this.orderService.getAllOrders();
+    return this.orderService.listOrders();
   }
 
   @Patch(':id')
   editOrder(
-    @Param('id') orderId: string,
-    @Body() dto: EditOrderDto
+    @Param('id', ParseIntPipe) orderId: number,
+    @Body() dto: EditOrderDto,
+    @GetUser() user: User
   ) {
     return this.orderService.editOrder(
-      parseInt(orderId),
+      user.id,
+      orderId,
       dto
     );
   }
 
   @Delete(':id')
-  deleteOrder(
-    @Param('id: string') orderId: string
+  async deleteOrder(
+    @Param('id', ParseIntPipe)
+    orderId: number,
+    @GetUser() user: User
   ) {
     return this.orderService.deleteOrder(
-      parseInt(orderId)
+      user.id,
+      orderId
     );
   }
 }

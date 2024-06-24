@@ -1,28 +1,33 @@
 import {
   IsString,
   IsNotEmpty,
-  IsOptional,
   IsNumber,
-  IsCurrency,
-  IsPositive
+  IsPositive,
+  MinLength,
+  MaxLength
 } from 'class-validator';
 
 export class CreateBookDto {
   @IsString()
   @IsNotEmpty()
+  @MinLength(3)
+  @MaxLength(100)
   title: string;
 
   @IsString()
-  @IsNotEmpty()
+  @MinLength(1)
+  @MaxLength(100)
   author: string;
 
   @IsString()
-  @IsOptional()
-  description?: string;
+  @IsNotEmpty()
+  @MinLength(5)
+  @MaxLength(400)
+  description: string;
 
   @IsNumber()
   @IsNotEmpty()
-  @IsCurrency()
+  @IsPositive()
   price: number;
 
   @IsNumber()

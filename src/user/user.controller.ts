@@ -5,16 +5,20 @@ import {
   UseGuards,
   Param,
   Delete,
-  Body
+  Body,
+  ParseIntPipe,
+  UseFilters
 } from '@nestjs/common';
 import { Guard } from '../auth/guard';
-import { GetUser } from 'src/auth/decorator';
+import { GetUser } from '../auth/decorator';
 import { User } from '@prisma/client';
 import { UserService } from './user.service';
 import { EditUserDto } from './dto/edit-user.dto';
 import { Roles } from '../auth/decorator/roles.decorator';
+import { HttpExceptionFilter } from '../exceptions/http-exception.filter';
 
 @UseGuards(Guard)
+@UseFilters(HttpExceptionFilter)
 @Controller('users')
 export class UserController {
   constructor(
@@ -27,21 +31,26 @@ export class UserController {
   }
 
   @Get(':id')
-  getUser(@Param('id') userId: string) {
+  @Roles('ADMIN')
+  getUser(
+    @Param('id', ParseIntPipe) userId: number
+  ) {
     return this.userService.getUserById(userId);
   }
 
-  @Patch(':id')
+  @Patch()
   editUser(
-    @Param('id') userId: string,
+    @GetUser() user: User,
     @Body() dto: EditUserDto
   ) {
-    return this.userService.editUser(userId, dto);
+    return this.userService.editUser(
+      user.id,
+      dto
+    );
   }
 
-  @Delete(':id')
-  @Roles('ADMIN')
-  deleteUser(@Param('id') userId: string) {
-    return this.userService.deleteUser(userId);
+  @Delete()
+  deleteUser(@GetUser() user: User) {
+    return this.userService.deleteUser(user.id);
   }
 }

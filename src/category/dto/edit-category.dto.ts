@@ -1,12 +1,12 @@
 import {
   IsString,
-  IsNotEmpty,
-  IsOptional
+  MinLength,
+  MaxLength
 } from 'class-validator';
 
 export class EditCategoryDto {
   @IsString()
-  @IsNotEmpty()
-  @IsOptional()
-  name?: string;
+  @MinLength(2)
+  @MaxLength(40)
+  name: string;
 }

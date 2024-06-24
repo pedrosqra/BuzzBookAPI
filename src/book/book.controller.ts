@@ -7,17 +7,21 @@ import {
   Param,
   Body,
   Query,
-  UseGuards
+  UseGuards,
+  UseFilters,
+  ParseIntPipe
 } from '@nestjs/common';
 import { BookService } from './book.service';
 import {
   CreateBookDto,
   EditBookDto
 } from './dto';
-import { Guard } from 'src/auth/guard';
+import { Guard } from '../auth/guard/';
 import { Roles } from '../auth/decorator/roles.decorator';
+import { HttpExceptionFilter } from '../exceptions/http-exception.filter';
 
 @UseGuards(Guard)
+@UseFilters(HttpExceptionFilter)
 @Controller('books')
 export class BookController {
   constructor(
@@ -38,10 +42,10 @@ export class BookController {
   }
 
   @Get(':id')
-  getBookById(@Param('id') bookId: string) {
-    return this.bookService.getBookById(
-      parseInt(bookId, 10)
-    );
+  getBookById(
+    @Param('id', ParseIntPipe) id: number
+  ) {
+    return this.bookService.getBookById(id);
   }
 
   @Get()
@@ -50,30 +54,28 @@ export class BookController {
   }
 
   @Get('category/:id')
-  getBooksByCategory(@Param('id') id: string) {
-    const categoryId = parseInt(id);
+  getBooksByCategory(
+    @Param('id', ParseIntPipe) id: number
+  ) {
     return this.bookService.getBooksByCategory(
-      categoryId
+      id
     );
   }
 
   @Patch(':id')
   @Roles('ADMIN')
   editBook(
-    @Param('id') bookId: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() dto: EditBookDto
   ) {
-    return this.bookService.editBook(
-      parseInt(bookId),
-      dto
-    );
+    return this.bookService.editBook(id, dto);
   }
 
   @Delete(':id')
   @Roles('ADMIN')
-  deleteBook(@Param('id') bookId: string) {
-    return this.bookService.deleteBook(
-      parseInt(bookId)
-    );
+  deleteBook(
+    @Param('id', ParseIntPipe) id: number
+  ) {
+    return this.bookService.deleteBook(id);
   }
 }

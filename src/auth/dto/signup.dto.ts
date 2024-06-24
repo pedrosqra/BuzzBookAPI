@@ -4,11 +4,15 @@ import {
   IsString,
   IsPostalCode,
   IsStrongPassword,
-  IsOptional
+  IsOptional,
+  IsIn,
+  MinLength,
+  MaxLength
 } from 'class-validator';
 
 export class SignupDto {
   @IsEmail()
+  @IsString()
   @IsNotEmpty()
   email: string;
 
@@ -24,26 +28,35 @@ export class SignupDto {
 
   @IsString()
   @IsNotEmpty()
+  @MinLength(2)
+  @MaxLength(20)
   firstName: string;
 
   @IsString()
   @IsNotEmpty()
+  @MinLength(2)
+  @MaxLength(20)
   lastName: string;
 
   @IsString()
   @IsNotEmpty()
+  @MinLength(2)
+  @MaxLength(40)
   street: string;
 
   @IsString()
   @IsNotEmpty()
+  @MinLength(2)
+  @MaxLength(40)
   district: string;
 
   @IsString()
   @IsNotEmpty()
-  @IsPostalCode()
+  @IsPostalCode('BR')
   postalCode: string;
 
   @IsString()
   @IsOptional()
+  @IsIn(['USER', 'ADMIN'])
   role?: string;
 }

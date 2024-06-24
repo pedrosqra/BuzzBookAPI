@@ -1,117 +1,242 @@
 import {
   Injectable,
-  NotFoundException
+  NotFoundException,
+  BadRequestException,
+  InternalServerErrorException,
+  Logger,
+  HttpStatus
 } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { BookRepository } from './book.repository';
 import {
   CreateBookDto,
   EditBookDto
 } from './dto';
+import { buildResponse } from '../util/response.util';
 
 @Injectable()
 export class BookService {
+  private readonly logger = new Logger(
+    BookService.name
+  );
+
   constructor(
-    private readonly prisma: PrismaService
+    private readonly bookRepository: BookRepository
   ) {}
 
   async createBook(dto: CreateBookDto) {
-    const {
-      title,
-      author,
-      description,
-      price,
-      quantity,
-      categoryId
-    } = dto;
+    try {
+      const book =
+        await this.bookRepository.createBook(dto);
 
-    const book = this.prisma.book.create({
-      data: {
-        title,
-        author,
-        description,
-        price,
-        bookQuantity: quantity,
-        categoryId
+      return buildResponse(
+        HttpStatus.CREATED,
+        'Book created successfully',
+        book
+      );
+    } catch (error) {
+      this.logger.error(
+        'Error creating book:',
+        error
+      );
+
+      if (error.code === 'P2003') {
+        throw new BadRequestException(
+          'Invalid category ID'
+        );
+      } else {
+        throw new InternalServerErrorException(
+          'Failed to create book'
+        );
       }
-    });
-    return book;
+    }
   }
 
   async getBooksByTitle(title: string) {
-    console.log(title);
-    return this.prisma.book.findMany({
-      where: {
-        title: {
-          contains: title,
-          mode: 'insensitive'
-        }
+    try {
+      const books =
+        await this.bookRepository.findByTitle(
+          title
+        );
+      if (!books.length) {
+        throw new InternalServerErrorException();
       }
-    });
+
+      return buildResponse(
+        HttpStatus.OK,
+        'Books listed by title successfully',
+        books
+      );
+    } catch (error) {
+      this.logger.error(
+        'Error searching books by title:',
+        error
+      );
+      throw new InternalServerErrorException(
+        'Failed to search books'
+      );
+    }
   }
 
   async getBookById(bookId: number) {
-    const book =
-      await this.prisma.book.findUnique({
-        where: { id: bookId }
-      });
-    if (!book) {
+    try {
+      const book =
+        await this.findBookById(bookId);
+
+      if (!book) {
+        throw new NotFoundException(
+          'Book not found'
+        );
+      }
+
+      return buildResponse(
+        HttpStatus.OK,
+        `Book got with id ${bookId}`,
+        book
+      );
+    } catch (error) {
+      this.logger.error(
+        'Error getting book by ID:',
+        error
+      );
       throw new NotFoundException(
         'Book not found'
       );
     }
-    return book;
   }
 
   async getAllBooks() {
-    return this.prisma.book.findMany();
+    try {
+      const books =
+        await this.bookRepository.findAll();
+
+      return buildResponse(
+        HttpStatus.OK,
+        'Books listed successfully',
+        books
+      );
+    } catch (error) {
+      this.logger.error(
+        'Error getting all books:',
+        error
+      );
+      throw new InternalServerErrorException(
+        'Failed to get all books'
+      );
+    }
   }
 
   async getBooksByCategory(categoryId: number) {
-    return this.prisma.book.findMany({
-      where: { categoryId }
-    });
+    try {
+      const books =
+        await this.bookRepository.findByCategory(
+          categoryId
+        );
+
+      if (!books.length) {
+        throw new NotFoundException();
+      }
+
+      return buildResponse(
+        HttpStatus.OK,
+        'Books listed by category successfully',
+        books
+      );
+    } catch (error) {
+      this.logger.error(
+        'Error getting books by category:',
+        error
+      );
+      throw new NotFoundException(
+        'No book was found in this category'
+      );
+    }
   }
 
   async editBook(
     bookId: number,
     dto: EditBookDto
   ) {
-    const book =
-      await this.prisma.book.findUnique({
-        where: { id: bookId }
-      });
-    if (!book) {
-      throw new NotFoundException(
-        'Book not found'
-      );
-    }
+    try {
+      const book =
+        await this.findBookById(bookId);
 
-    return this.prisma.book.update({
-      where: { id: bookId },
-      data: {
-        title: dto.title,
-        author: dto.author,
-        description: dto.description,
-        price: dto.price
+      if (!book) {
+        throw new NotFoundException(
+          'Book not found'
+        );
       }
-    });
+      const updatedBook =
+        await this.bookRepository.updateBook(
+          bookId,
+          dto
+        );
+
+      return buildResponse(
+        HttpStatus.OK,
+        'Book edited successfully',
+        updatedBook
+      );
+    } catch (error) {
+      this.logger.error(
+        'Error editing book:',
+        error
+      );
+      if (error.code === 'P2002') {
+        throw new BadRequestException(
+          'Another book with this title already exists'
+        );
+      } else if (error.code === 'P2003') {
+        throw new BadRequestException(
+          'Invalid category ID'
+        );
+      } else {
+        throw new InternalServerErrorException(
+          'Failed to edit book'
+        );
+      }
+    }
   }
 
   async deleteBook(bookId: number) {
+    try {
+      const book =
+        await this.findBookById(bookId);
+
+      if (!book) {
+        throw new NotFoundException(
+          'Book not found'
+        );
+      }
+
+      const deleteData =
+        await this.bookRepository.deleteBook(
+          bookId
+        );
+
+      return buildResponse(
+        200,
+        'Books deleted successfully',
+        deleteData
+      );
+    } catch (error) {
+      this.logger.error(
+        'Error deleting book:',
+        error
+      );
+      throw new InternalServerErrorException(
+        'Failed to delete book'
+      );
+    }
+  }
+
+  private async findBookById(bookId: number) {
     const book =
-      await this.prisma.book.findUnique({
-        where: { id: bookId }
-      });
+      await this.bookRepository.findById(bookId);
     if (!book) {
       throw new NotFoundException(
         'Book not found'
       );
     }
-    await this.prisma.book.delete({
-      where: { id: bookId }
-    });
-    return {
-      message: 'Book deleted successfully'
-    };
+    return book;
   }
 }

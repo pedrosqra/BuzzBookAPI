@@ -33,28 +33,23 @@ export class Guard extends AuthGuard('jwt') {
     context: ExecutionContext
   ) {
     if (err || !user) {
-      throw err || new UnauthorizedException();
+      throw (
+        err ||
+        new UnauthorizedException(
+          'Authentication failed'
+        )
+      );
     }
 
     const roles =
-      this.reflector.get<string[]>(
+      this.reflector.getAllAndOverride<string[]>(
         'roles',
-        context.getHandler()
-      ) ||
-      this.reflector.get<string[]>(
-        'roles',
-        context.getClass()
+        [context.getHandler(), context.getClass()]
       );
 
-    if (!roles) {
-      return user;
-    }
-
-    if (
-      !(roles as string[]).includes(user.role)
-    ) {
+    if (roles && !roles.includes(user.role)) {
       throw new UnauthorizedException(
-        'Unauthorized access'
+        'Insufficient role permissions'
       );
     }
 

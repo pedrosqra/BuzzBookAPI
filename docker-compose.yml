@@ -10,6 +10,16 @@ services:
       POSTGRES_DB: nest
     networks:
       - buzzbook
+  test-db:
+    image: postgres:13
+    ports:
+      - "5435:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 233xWJWmT3QbPvw
+      POSTGRES_DB: nest
+    networks:
+      - buzzbook
 
 networks:
   buzzbook:

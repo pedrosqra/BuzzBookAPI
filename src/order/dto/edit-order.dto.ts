@@ -1,8 +1,7 @@
 import {
   IsNotEmpty,
   Min,
-  IsNumber,
-  IsString
+  IsNumber
 } from 'class-validator';
 
 export class EditOrderDto {
@@ -10,8 +9,4 @@ export class EditOrderDto {
   @IsNotEmpty()
   @Min(1)
   quantity: number;
-
-  @IsString()
-  @IsNotEmpty()
-  status: string;
 }

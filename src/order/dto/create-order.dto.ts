@@ -7,10 +7,6 @@ import {
 export class CreateOrderDto {
   @IsNumber()
   @IsNotEmpty()
-  userId: number;
-
-  @IsNumber()
-  @IsNotEmpty()
   bookId: number;
 
   @IsNumber()

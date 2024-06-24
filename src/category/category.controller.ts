@@ -6,17 +6,20 @@ import {
   Param,
   Patch,
   Delete,
-  UseGuards
+  UseGuards,
+  UseFilters
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import {
   CreateCategoryDto,
   EditCategoryDto
 } from './dto';
-import { Guard } from 'src/auth/guard';
+import { Guard } from '../auth/guard';
 import { Roles } from '../auth/decorator/roles.decorator';
+import { HttpExceptionFilter } from '../exceptions/http-exception.filter';
 
 @UseGuards(Guard)
+@UseFilters(HttpExceptionFilter)
 @Controller('category')
 export class CategoryController {
   constructor(
@@ -32,7 +35,6 @@ export class CategoryController {
   }
 
   @Get(':id')
-  @Roles('ADMIN')
   getCategoryById(@Param('id') id: string) {
     const categoryId = parseInt(id);
     return this.categoryService.getCategoryById(
@@ -41,7 +43,6 @@ export class CategoryController {
   }
 
   @Get()
-  @Roles('ADMIN')
   getAllCategories() {
     return this.categoryService.getAllCategories();
   }
