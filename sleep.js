@@ -5,7 +5,7 @@ const sleep = (seconds) => {
 };
 
 const main = async () => {
-  const seconds = 1;
+  const seconds = 2;
   await sleep(seconds);
   process.exit(0);
 };

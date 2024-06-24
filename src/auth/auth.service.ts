@@ -8,6 +8,7 @@ import { SignupDto, AuthDto } from './dto';
 import { ConfigService } from '@nestjs/config';
 import { AuthRepository } from './auth.repository';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import * as argon from 'argon2';
 
 @Injectable()
 export class AuthService {
@@ -24,8 +25,14 @@ export class AuthService {
     dto: SignupDto
   ): Promise<{ accessToken: string }> {
     try {
-      const { accessToken } =
+      const data =
         await this.authRepository.signup(dto);
+      const user = data.user;
+      const accessToken = await this.signToken(
+        user.id,
+        user.email,
+        user.role
+      );
       return { accessToken };
     } catch (error) {
       this.logger.error(
@@ -51,8 +58,29 @@ export class AuthService {
     userId: number;
   }> {
     try {
-      const { accessToken, userId } =
+      const data =
         await this.authRepository.signin(dto);
+
+      const user = data.user;
+      if (!user) {
+        throw new ForbiddenException();
+      }
+
+      const pwMatches = await argon.verify(
+        user.hash,
+        dto.password
+      );
+
+      if (!pwMatches) {
+        throw new ForbiddenException();
+      }
+
+      const accessToken = await this.signToken(
+        user.id,
+        user.email,
+        user.role
+      );
+      const userId = user.id;
       return { accessToken, userId };
     } catch (error) {
       this.logger.error(
@@ -66,5 +94,19 @@ export class AuthService {
       }
       throw error;
     }
+  }
+
+  private async signToken(
+    userId: number,
+    email: string,
+    role: string
+  ): Promise<string> {
+    const payload = { sub: userId, email, role };
+    const secret =
+      this.config.get<string>('JWT_SECRET');
+    return this.jwt.signAsync(payload, {
+      expiresIn: '30m',
+      secret
+    });
   }
 }

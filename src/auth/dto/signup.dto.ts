@@ -3,13 +3,13 @@ import {
   IsEmail,
   IsNotEmpty,
   IsString,
-  IsPostalCode,
-  IsStrongPassword,
   IsOptional,
   IsIn,
   MinLength,
   MaxLength
 } from 'class-validator';
+import { IsStrongPassword } from '../validator/password.validator';
+import { IsPostalCodeBR } from '../validator/postal-code.validator';
 
 export class SignupDto {
   @ApiProperty({
@@ -24,13 +24,7 @@ export class SignupDto {
     description: 'User password (must be strong)'
   })
   @IsString()
-  @IsStrongPassword({
-    minLength: 8,
-    minNumbers: 1,
-    minSymbols: 1,
-    minUppercase: 1,
-    minLowercase: 1
-  })
+  @IsStrongPassword()
   password: string;
 
   @ApiProperty({ description: 'User first name' })
@@ -66,7 +60,7 @@ export class SignupDto {
   })
   @IsString()
   @IsNotEmpty()
-  @IsPostalCode('BR')
+  @IsPostalCodeBR()
   postalCode: string;
 
   @ApiProperty({

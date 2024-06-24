@@ -12,6 +12,7 @@ import {
   ApiResponse,
   ApiTags
 } from '@nestjs/swagger';
+import * as argon from 'argon2';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -39,7 +40,7 @@ export class AuthController {
       'Sign in with existing user credentials'
   })
   @ApiResponse({
-    status: 201,
+    status: 200,
     description:
       'User logged in successfully. Returns an access token.',
     type: String
