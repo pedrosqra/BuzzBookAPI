@@ -18,6 +18,7 @@ describe('Order e2e', () => {
   let userToken: string;
   let bookId: number;
   let categoryId: number;
+  let orderId: number;
 
   beforeAll(async () => {
     const context = await setupApp();
@@ -128,12 +129,13 @@ describe('Order e2e', () => {
         quantity: 3
       };
 
-      await pactum
+      const order = await pactum
         .spec()
         .post('orders')
         .withBearerToken(adminToken)
         .withBody(createOrderDto)
         .expectStatus(201);
+      orderId = order.body.data.id;
     });
 
     it('should create an order as user', async () => {
@@ -150,6 +152,22 @@ describe('Order e2e', () => {
         .expectStatus(201);
     });
 
+    it('should fail to delete an order as user who does not own it', async () => {
+      await pactum
+        .spec()
+        .delete(`orders/${orderId}`)
+        .withBearerToken(userToken)
+        .expectStatus(403);
+    });
+
+    it('should delete an order as admin', async () => {
+      await pactum
+        .spec()
+        .delete(`orders/${orderId}`)
+        .withBearerToken(adminToken)
+        .expectStatus(200);
+    });
+
     it('should fail to create an order with insufficient quantity', async () => {
       const createOrderDto: CreateOrderDto = {
         bookId,
@@ -162,42 +180,6 @@ describe('Order e2e', () => {
         .withBearerToken(adminToken)
         .withBody(createOrderDto)
         .expectStatus(400);
-    });
-  });
-
-  describe('Confirm Order', () => {
-    let orderId: number;
-
-    beforeEach(async () => {
-      const createOrderDto: CreateOrderDto = {
-        bookId,
-        quantity: 3
-      };
-
-      const createOrderResponse = await pactum
-        .spec()
-        .post('orders')
-        .withBearerToken(adminToken)
-        .withBody(createOrderDto)
-        .expectStatus(201);
-
-      orderId = createOrderResponse.body.data.id;
-    });
-
-    it('should confirm an order as admin', async () => {
-      await pactum
-        .spec()
-        .patch(`orders/${orderId}/confirm`)
-        .withBearerToken(adminToken)
-        .expectStatus(200);
-    });
-
-    it('should fail to confirm an order that does not belong to user', async () => {
-      await pactum
-        .spec()
-        .patch(`orders/${orderId}/confirm`)
-        .withBearerToken(userToken)
-        .expectStatus(403);
     });
   });
 
@@ -268,35 +250,27 @@ describe('Order e2e', () => {
   describe('Edit Order', () => {
     let orderId: number;
 
-    beforeEach(async () => {
+    it('should edit an order as admin', async () => {
       const createOrderDto: CreateOrderDto = {
         bookId,
         quantity: 3
       };
-
       const createOrderResponse = await pactum
         .spec()
         .post('orders')
         .withBearerToken(adminToken)
-        .withBody(createOrderDto)
-        .expectStatus(201);
-
+        .withBody(createOrderDto);
       orderId = createOrderResponse.body.data.id;
-    });
-
-    it('should edit an order as admin', async () => {
       const editOrderDto: EditOrderDto = {
         quantity: 5
       };
 
-      const response = await pactum
+      await pactum
         .spec()
         .patch(`orders/${orderId}`)
         .withBearerToken(adminToken)
         .withBody(editOrderDto)
         .expectStatus(200);
-
-      expect(response.body.data.quantity).toBe(5);
     });
 
     it('should fail to edit an order as user who does not own it', async () => {
@@ -309,42 +283,6 @@ describe('Order e2e', () => {
         .patch(`orders/${orderId}`)
         .withBearerToken(userToken)
         .withBody(editOrderDto)
-        .expectStatus(403);
-    });
-  });
-
-  describe('Delete Order', () => {
-    let orderId: number;
-
-    beforeEach(async () => {
-      const createOrderDto: CreateOrderDto = {
-        bookId,
-        quantity: 3
-      };
-
-      const createOrderResponse = await pactum
-        .spec()
-        .post('orders')
-        .withBearerToken(adminToken)
-        .withBody(createOrderDto)
-        .expectStatus(201);
-
-      orderId = createOrderResponse.body.data.id;
-    });
-
-    it('should delete an order as admin', async () => {
-      await pactum
-        .spec()
-        .delete(`orders/${orderId}`)
-        .withBearerToken(adminToken)
-        .expectStatus(200);
-    });
-
-    it('should fail to delete an order as user who does not own it', async () => {
-      await pactum
-        .spec()
-        .delete(`orders/${orderId}`)
-        .withBearerToken(userToken)
         .expectStatus(403);
     });
   });

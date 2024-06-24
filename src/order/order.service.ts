@@ -190,15 +190,9 @@ export class OrderService {
     dto: EditOrderDto
   ) {
     try {
-      const order =
-        await this.getOrderWithAuthorizationCheck(
-          userId,
-          orderId
-        );
-
-      await this.validateUserAuthorization(
+      await this.getOrderWithAuthorizationCheck(
         userId,
-        order.userId
+        orderId
       );
 
       const updatedOrder =
