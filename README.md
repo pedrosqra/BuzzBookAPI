@@ -58,15 +58,14 @@ buzzbook/
     - Docker e Docker Compose instalados
 2. **Clone o repositório:**
     
-    **Bash**
+
     
     ```bash
    git clone <URL_DO_REPOSITORIO>
     ```
     
 4. **Instale as dependências:**
-    
-    **Bash**
+
    ```bash
     yarn install
    ```
@@ -84,7 +83,6 @@ buzzbook/
 7. **Inicie o banco de dados:**
     - Usando Docker Compose:
         
-        **Bash**
       ```bash
         docker-compose up -d
       ```
@@ -92,14 +90,12 @@ buzzbook/
 
 8. **Execute as migrações do banco de dados:**
     
-    **Bash**
    ```bash
     yarn prisma migrate dev
    ```
     
 10. **Inicie a aplicação:**
     
-    **Bash**
     ```bash
     yarn start:dev
     ```
@@ -120,7 +116,6 @@ A documentação completa dos endpoints da API, incluindo os métodos HTTP, par�
 
 O projeto inclui testes unitários e de integração, que podem ser executados com o comando:
 
-**Bash**
 ```bash
 yarn test:e2e
 ```
