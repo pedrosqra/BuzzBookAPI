@@ -79,6 +79,7 @@ export class BookRepository {
         author: dto.author,
         description: dto.description,
         price: dto.price,
+        bookQuantity: dto.quantity,
         categoryId: dto.categoryId
       }
     });

@@ -52,6 +52,14 @@ export class EditBookDto {
   price?: number;
 
   @ApiProperty({
+    description: 'Quantity of books in stock'
+  })
+  @IsNumber()
+  @IsNotEmpty()
+  @IsPositive()
+  quantity: number;
+
+  @ApiProperty({
     description:
       'ID of the category the book belongs to',
     required: false
