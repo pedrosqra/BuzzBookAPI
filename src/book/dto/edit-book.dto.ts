@@ -56,8 +56,9 @@ export class EditBookDto {
   })
   @IsNumber()
   @IsNotEmpty()
+  @IsOptional()
   @IsPositive()
-  quantity: number;
+  quantity?: number;
 
   @ApiProperty({
     description:
