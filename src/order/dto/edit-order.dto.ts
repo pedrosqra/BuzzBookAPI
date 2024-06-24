@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   IsNotEmpty,
   Min,
@@ -5,6 +6,10 @@ import {
 } from 'class-validator';
 
 export class EditOrderDto {
+  @ApiProperty({
+    description: 'New quantity of books',
+    example: 3
+  })
   @IsNumber()
   @IsNotEmpty()
   @Min(1)

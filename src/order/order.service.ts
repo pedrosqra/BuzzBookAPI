@@ -31,6 +31,10 @@ export class OrderService {
     dto: CreateOrderDto
   ) {
     try {
+      await this.checkIfOrderIsAlreadyOngoing(
+        loggedUserId
+      );
+
       await this.validateBookAvailability(
         dto.bookId,
         dto.quantity
@@ -314,7 +318,7 @@ export class OrderService {
 
     if (book.data.bookQuantity < quantity) {
       throw new BadRequestException(
-        `Book with id ${bookId} is not available or has insufficient quantity`
+        `Not enough copies of book ${bookId} available.`
       );
     }
   }
@@ -328,5 +332,26 @@ export class OrderService {
         'You are not authorized to access this order'
       );
     }
+  }
+
+  async checkIfOrderIsAlreadyOngoing(
+    loggedUserId: number
+  ): Promise<void> {
+    const orders =
+      await this.orderRepository.findByUserId(
+        loggedUserId
+      );
+    orders.forEach((order) => {
+      console.log('ORDER', order);
+      if (
+        order &&
+        order.userId === loggedUserId &&
+        order.status !== 'confirmed'
+      ) {
+        throw new ForbiddenException(
+          'User already has an order ongoing. You can confirm or cancel this order.'
+        );
+      }
+    });
   }
 }

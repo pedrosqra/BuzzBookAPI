@@ -58,7 +58,7 @@ export class BookService {
           title
         );
       if (!books.length) {
-        throw new InternalServerErrorException();
+        throw new NotFoundException();
       }
 
       return buildResponse(
@@ -71,8 +71,8 @@ export class BookService {
         'Error searching books by title:',
         error
       );
-      throw new InternalServerErrorException(
-        'Failed to search books'
+      throw new NotFoundException(
+        `No books with title '${title}' found`
       );
     }
   }
@@ -90,7 +90,7 @@ export class BookService {
 
       return buildResponse(
         HttpStatus.OK,
-        `Book got with id ${bookId}`,
+        `Book found with id ${bookId}`,
         book
       );
     } catch (error) {

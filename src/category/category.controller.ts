@@ -18,8 +18,15 @@ import {
 import { Guard } from '../auth/guard';
 import { Roles } from '../auth/decorator/roles.decorator';
 import { HttpExceptionFilter } from '../exceptions/http-exception.filter';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiBearerAuth
+} from '@nestjs/swagger';
 
-@UseGuards(Guard)
+@ApiTags('categories')
 @UseFilters(HttpExceptionFilter)
 @Controller('category')
 export class CategoryController {
@@ -28,7 +35,17 @@ export class CategoryController {
   ) {}
 
   @Post()
+  @UseGuards(Guard)
   @Roles('ADMIN')
+  @ApiOperation({
+    summary: 'Create a new category'
+  })
+  @ApiResponse({
+    status: 201,
+    description:
+      'Info about the successfully created category.'
+  })
+  @ApiBearerAuth()
   createCategory(@Body() dto: CreateCategoryDto) {
     return this.categoryService.createCategory(
       dto
@@ -36,6 +53,18 @@ export class CategoryController {
   }
 
   @Get(':id')
+  @ApiOperation({
+    summary: 'Get a category by ID'
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'Category ID',
+    type: String
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Category details'
+  })
   getCategoryById(
     @Param('id', ParseIntPipe) id: number
   ) {
@@ -45,12 +74,33 @@ export class CategoryController {
   }
 
   @Get()
+  @ApiOperation({ summary: 'Get all categories' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of all categories'
+  })
+  @ApiBearerAuth()
   getAllCategories() {
     return this.categoryService.getAllCategories();
   }
 
   @Patch(':id')
+  @UseGuards(Guard)
   @Roles('ADMIN')
+  @ApiOperation({
+    summary: 'Update a category by ID'
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'Category ID',
+    type: Number
+  })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Info about the successfully updated category.'
+  })
+  @ApiBearerAuth()
   editCategory(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: EditCategoryDto
@@ -62,7 +112,22 @@ export class CategoryController {
   }
 
   @Delete(':id')
+  @UseGuards(Guard)
   @Roles('ADMIN')
+  @ApiOperation({
+    summary: 'Delete a category by ID'
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'Category ID',
+    type: Number
+  })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Info about the successfully deleted category.'
+  })
+  @ApiBearerAuth()
   deleteCategory(
     @Param('id', ParseIntPipe) id: number
   ) {

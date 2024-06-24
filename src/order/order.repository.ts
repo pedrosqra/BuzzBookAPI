@@ -39,6 +39,15 @@ export class OrderRepository {
     });
   }
 
+  async findByUserId(
+    userId: number
+  ): Promise<Order[] | null> {
+    return this.prisma.order.findMany({
+      where: { userId },
+      include: { user: true, book: true }
+    });
+  }
+
   async findAll(): Promise<Order[]> {
     return this.prisma.order.findMany({
       include: { user: true, book: true }

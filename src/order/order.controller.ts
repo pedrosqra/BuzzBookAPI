@@ -20,7 +20,15 @@ import { Roles } from '../auth/decorator/roles.decorator';
 import { HttpExceptionFilter } from '../exceptions/http-exception.filter';
 import { GetUser } from '../auth/decorator';
 import { User } from '@prisma/client';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiBearerAuth
+} from '@nestjs/swagger';
 
+@ApiTags('orders')
 @UseGuards(Guard)
 @UseFilters(HttpExceptionFilter)
 @Controller('orders')
@@ -30,6 +38,13 @@ export class OrderController {
   ) {}
 
   @Post()
+  @ApiOperation({ summary: 'Create a new order' })
+  @ApiResponse({
+    status: 201,
+    description:
+      'Info about the  successfully created order.'
+  })
+  @ApiBearerAuth()
   createOrder(
     @Body() dto: CreateOrderDto,
     @GetUser() user: User
@@ -41,6 +56,20 @@ export class OrderController {
   }
 
   @Patch(':id/confirm')
+  @ApiOperation({
+    summary: 'Confirm an order by ID'
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'Order ID',
+    type: Number
+  })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Info about the successfully confirmed order.'
+  })
+  @ApiBearerAuth()
   confirmOrder(
     @Param('id', ParseIntPipe) orderId: number,
     @GetUser() user: User
@@ -52,6 +81,17 @@ export class OrderController {
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Get an order by ID' })
+  @ApiParam({
+    name: 'id',
+    description: 'Order ID',
+    type: Number
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Order details'
+  })
+  @ApiBearerAuth()
   getOrderById(
     @Param('id', ParseIntPipe) orderId: number,
     @GetUser() user: User
@@ -64,11 +104,33 @@ export class OrderController {
 
   @Get()
   @Roles('ADMIN')
+  @ApiOperation({
+    summary: 'Get all orders (admin only)'
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'List of all orders'
+  })
+  @ApiBearerAuth()
   getAllOrders() {
     return this.orderService.listOrders();
   }
 
   @Patch(':id')
+  @ApiOperation({
+    summary: 'Update an order by ID'
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'Order ID',
+    type: Number
+  })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Info about the successfully updated order.'
+  })
+  @ApiBearerAuth()
   editOrder(
     @Param('id', ParseIntPipe) orderId: number,
     @Body() dto: EditOrderDto,
@@ -82,9 +144,22 @@ export class OrderController {
   }
 
   @Delete(':id')
+  @ApiOperation({
+    summary: 'Delete an order by ID'
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'Order ID',
+    type: Number
+  })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Info about the successfully deleted.'
+  })
+  @ApiBearerAuth()
   async deleteOrder(
-    @Param('id', ParseIntPipe)
-    orderId: number,
+    @Param('id', ParseIntPipe) orderId: number,
     @GetUser() user: User
   ) {
     return this.orderService.deleteOrder(

@@ -26,7 +26,7 @@ export class UserService {
 
     return buildResponse(
       HttpStatus.OK,
-      `User got with id ${userId}`,
+      `User found with id ${userId}`,
       userWithoutSensitiveData
     );
   }
