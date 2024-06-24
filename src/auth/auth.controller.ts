@@ -13,7 +13,7 @@ import {
   ApiTags
 } from '@nestjs/swagger';
 
-@ApiTags('auth') // Adicione uma tag para agrupar os endpoints de autenticação
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}

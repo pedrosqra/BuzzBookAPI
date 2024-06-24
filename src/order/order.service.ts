@@ -342,7 +342,6 @@ export class OrderService {
         loggedUserId
       );
     orders.forEach((order) => {
-      console.log('ORDER', order);
       if (
         order &&
         order.userId === loggedUserId &&
